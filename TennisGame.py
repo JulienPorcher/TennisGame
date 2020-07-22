@@ -12,7 +12,7 @@ class TennisGame():
     def __init__(self, player_1, player_2):
         self.player_1 = player_1
         self.player_2 = player_2
-        self.score = [0,0]       # Number of point for each player in the game
+        self.l_score = [0,0]     # Number of point for each player in the game
         self.game = [0,0]        # Number of game for each player in the set
         self.dict_score = {0: "Love", 1: "Fifteen", 2: "Thirty", 3: "Forty"}
         self.morethan3 = False   # If one player scores more than 3 points
@@ -24,7 +24,7 @@ class TennisGame():
         '''
         Initialise Bool if a new game start
         '''
-        if self.score == [0,0]:
+        if self.l_score == [0,0]:
             self.morethan3 = False
 
     def point(self, player):
@@ -37,17 +37,22 @@ class TennisGame():
         Increment the score
         '''
 
+        # Test player name
+        self.test(player)
+        # Test if it's a new game
+        self.new_game()
+
         if player == self.player_1:
-            self.score[0] = self.score[0] + 1
+            self.l_score[0] = self.l_score[0] + 1
         else:
-            self.score[1] = self.score[1] + 1
+            self.l_score[1] = self.l_score[1] + 1
 
     def is_deuce(self):
         '''
         If at least three points have been scored by each player, and the
         scores are equal, the score is "Deuce".
         '''
-        if self.score[0] == self.score[1] and self.score[0] >= 3:
+        if self.l_score[0] == self.l_score[1] and self.l_score[0] >= 3:
             self.deuce = True
             return 'Deuce'
         else:
@@ -59,12 +64,12 @@ class TennisGame():
         has one more point than his opponent, the score of the game is
         "Advantage" for the player in the lead.
         '''
-        if self.score[0] >= 4 and self.score[0]-self.score[1] == 1:
+        if self.l_score[0] >= 4 and self.l_score[0]-self.l_score[1] == 1:
             self.morethan3 = True
             self.advantage = True
             return str("Advantage " + self.player_1)
 
-        elif self.score[1] >= 4 and self.score[1]-self.score[0] == 1:
+        elif self.l_score[1] >= 4 and self.l_score[1]-self.l_score[0] == 1:
             self.morethan3 = True
             self.advantage = True
             return str("Advantage " + self.player_2)
@@ -76,17 +81,17 @@ class TennisGame():
         A game is won by the first player to have won at least four points in
         total and at least two points more than the opponent.
         '''
-        if self.score[0] >= 4 and self.score[0]-self.score[1] >= 2:
+        if self.l_score[0] >= 4 and self.l_score[0]-self.l_score[1] >= 2:
             self.morethan3 = True
             self.win = True
-            self.score = [0,0]
+            self.l_score = [0,0]
             self.game[0] = self.game[0] + 1
             return str("Game " + self.player_1)
 
-        elif self.score[1] >= 4 and self.score[1]-self.score[0] >= 2:
+        elif self.l_score[1] >= 4 and self.l_score[1]-self.l_score[0] >= 2:
             self.morethan3 = True
             self.win = True
-            self.score = [0,0]
+            self.l_score = [0,0]
             self.game[1] = self.game[1] + 1
             return str("Game " + self.player_2)
 
@@ -108,31 +113,23 @@ class TennisGame():
             raise ValueError("Incorrect player name, should be " +
                              self.player_1 + " or " + self.player_2)
 
-    def score(self, player):
+    def score(self):
         '''
         Return the score
         '''
-        # Test player name
-        self.test(player)
-        # Test if it's a new game
-        self.newgame()
-        # Increment the score
-        self.point(player)
+
         # Test if the game is won
         str_score = self.win_game()
-        print(str_score)
         # Test if there is an advantage
         if self.win is False:
             str_score = self.as_advantage()
-            print(str_score)
             if self.advantage is False:
                 # Test if there is a Deuce
                 str_score = self.is_deuce()
-                print(str_score)
                 # If none of the cases before, return the score
                 if self.deuce is False:
-                    score_p1 = self.dict_score[self.score[0]]
-                    score_p2 = self.dict_score[self.score[1]]
+                    score_p1 = self.dict_score[self.l_score[0]]
+                    score_p2 = self.dict_score[self.l_score[1]]
                     str_score = str(score_p1 + " - " + score_p2)
         # Initialize Bool
         self.win = False
