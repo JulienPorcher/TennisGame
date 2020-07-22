@@ -12,24 +12,22 @@ class TennisGame():
     def __init__(self, player_1, player_2):
         self.player_1 = player_1
         self.player_2 = player_2
-        self.score = [0,0]
-        self.game = [0,0]
+        self.score = [0,0]       # Number of point for each player in the game
+        self.game = [0,0]        # Number of game for each player in the set
         self.dict_score = {0: "Love", 1: "Fifteen", 2: "Thirty", 3: "Forty"}
-        self.morethan3 = False
-        self.win = False
-        self.deuce = False
-        self.advantage = False
-
-
-    def Newgame(self):
+        self.morethan3 = False   # If one player scores more than 3 points
+        self.win = False         # If one player won the game
+        self.deuce = False       # If there is a deuce
+        self.advantage = False   # If there is an advantage
+        
+    def new_game(self):
         '''
         Initialise Bool if a new game start
         '''
         if self.score == [0,0]:
             self.morethan3 = False
 
-
-    def Point(self, player):
+    def point(self, player):
         '''
         Parameters
         ----------
@@ -44,8 +42,7 @@ class TennisGame():
         else:
             self.score[1] = self.score[1] + 1
 
-
-    def Isdeuce(self):
+    def is_deuce(self):
         '''
         If at least three points have been scored by each player, and the
         scores are equal, the score is "Deuce".
@@ -56,8 +53,7 @@ class TennisGame():
         else:
             pass
 
-
-    def Asadvantage(self):
+    def as_advantage(self):
         '''
         If at least three points have been scored by each side and a player
         has one more point than his opponent, the score of the game is
@@ -75,8 +71,7 @@ class TennisGame():
         else:
             pass
 
-
-    def Game(self):
+    def win_game(self):
         '''
         A game is won by the first player to have won at least four points in
         total and at least two points more than the opponent.
@@ -87,45 +82,52 @@ class TennisGame():
             self.score = [0,0]
             self.game[0] = self.game[0] + 1
             return str("Game " + self.player_1)
-            
 
         elif self.score[1] >= 4 and self.score[1]-self.score[0] >= 2:
             self.morethan3 = True
             self.win = True
             self.score = [0,0]
-            self.game[0] = self.game[0] + 1
+            self.game[1] = self.game[1] + 1
             return str("Game " + self.player_2)
 
         else:
             pass
 
-
-    def Gamescore(self):
+    def game_score(self):
         '''
         Returns the number of games won in the set
         '''
         return str(self.player_1 + " : " + self.game[0] + ":" + self.game[1] +
                    " : " + self.player_2)
 
+    def test(self, player):
+        # Test the player name
+        if player == self.player_1 or player == self.player_2:
+            pass
+        else:
+            raise ValueError("Incorrect player name, should be " +
+                             self.player_1 + " or " + self.player_2)
 
-    def Score(self,player):
+    def score(self, player):
         '''
         Return the score
         '''
+        # Test player name
+        self.test(player)
         # Test if it's a new game
-        self.Newgame()
+        self.newgame()
         # Increment the score
-        self.Point(player)
+        self.point(player)
         # Test if the game is won
-        str_score = self.Game()
+        str_score = self.win_game()
         print(str_score)
         # Test if there is an advantage
         if self.win is False:
-            str_score = self.Asadvantage()
+            str_score = self.as_advantage()
             print(str_score)
             if self.advantage is False:
                 # Test if there is a Deuce
-                str_score = self.Isdeuce()
+                str_score = self.is_deuce()
                 print(str_score)
                 # If none of the cases before, return the score
                 if self.deuce is False:
